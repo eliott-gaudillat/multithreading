@@ -27,6 +27,6 @@ class Task:
         print("Task" + str(self.identifier) + " finish after " + str(self.time) + "s")
 
 
-if __name__ == "__main__":
-    task1 = Task(1, 10000)
-    task1.work()
+# if __name__ == "__main__":
+#  task1 = Task(1, 10000)
+# task1.work()
