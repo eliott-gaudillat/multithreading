@@ -5,11 +5,9 @@ import numpy as np
 
 
 class Task:
-    def __init__(self, id: int, size: int, a=None, b=None):
+    def __init__(self, id: int, size: int, a=None, b=None, t=None, x=None):
         self.identifier = id
         self.size = size
-        self.x = None
-        self.time = None
         if a is None:
             self.a = np.random.rand(self.size, self.size)
         else:
@@ -19,6 +17,15 @@ class Task:
             self.b = np.random.rand(self.size)
         else:
             self.b = b
+
+        if t is None:
+            self.time = 0.0
+        else:
+            self.time = t
+        if x is None:
+            self.x = np.zeros(size)
+        else:
+            self.x = x
 
     def work(self):
         # solve problem ax=b
@@ -38,6 +45,8 @@ class Task:
                 "b": self.b.tolist(),
                 "s": self.size,
                 "id": self.identifier,
+                "x": self.x.tolist(),
+                "time": self.time,
             }
         )
 
@@ -45,14 +54,30 @@ class Task:
     def from_json(self, txt):
         dic = json.loads(txt)
         return Task(
-            dic["id"], size=dic["s"], a=np.array(dic["a"]), b=np.array(dic["b"])
+            id=dic["id"],
+            size=dic["s"],
+            a=np.array(dic["a"]),
+            b=np.array(dic["b"]),
+            t=dic["time"],
+            x=np.array(dic["x"]),
         )
 
     def __eq__(self, t):
-        if isinstance(t, Task):
-            if np.array_equal(self.a, t.a) and np.array_equal(self.b, t.b):
-                return True
-        return False
+        if not isinstance(t, Task):
+            return False
+        if self.identifier != t.identifier:
+            return False
+        if self.size != t.size:
+            return False
+        if self.time != t.time:
+            return False
+        if not np.array_equal(self.a, t.a):
+            return False
+        if not np.array_equal(self.b, t.b):
+            return False
+        if not np.array_equal(self.x, t.x):
+            return False
+        return True
 
     # def __add__(self, other):
     #
@@ -64,7 +89,6 @@ if __name__ == "__main__":
     task2 = Task(2, 15)
     # task1.work()
     txt = task1.to_JSON()
-    print(txt)
     task3 = Task.from_json(txt)
     print(task1 == task2)
     print(task1 == task3)
