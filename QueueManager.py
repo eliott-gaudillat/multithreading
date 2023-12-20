@@ -1,3 +1,4 @@
+import os
 import queue
 from multiprocessing.managers import BaseManager
 
@@ -9,37 +10,37 @@ KEY = b"daerhtitlum"
 class QueueManager(BaseManager):
     """base class for manager of the queue"""
 
-    def __init__(self, address, authkey):
-        # creation des queues
-        self.task_queue = queue.Queue()
-        self.result_queue = queue.Queue()
-        # register
-        QueueManager.register("get_task", callable=lambda: self.task_queue)
-        QueueManager.register("get_result", callable=lambda: self.result_queue)
-
-        # creation manager , server
-        self.manager = super().__init__(address=address, authkey=authkey)
-        self.server = self.manager.get_server()
-        self.server.serve_forever()
-        print("ok")
-        # creation des queues
+    pass
 
 
 class QueueClient:
     """Base class for users of the Queue."""
 
-    def __init__(self, address, authkey):
+    def __init__(self):
         # register
-        QueueManager.register("get_task")
-        QueueManager.register("get_result")
+        QueueManager.register("get_tasks")
+        QueueManager.register("get_results")
         # creation de l'instance du manager et connection au manager process distant
-        manager = QueueManager(address=address, authkey=authkey)
+        manager = QueueManager(
+            address=(os.environ.get("MANAGER_HOST", "localhost"), PORT), authkey=KEY
+        )
         manager.connect()
         # recuperation des queues
-        self.tasks = manager.get_task()
-        self.result = manager.get_result()
+        self.tasks = manager.get_tasks()
+        self.results = manager.get_results()
+
+        def getTask(self):
+            return self.tasks
+
+        def getResult(self):
+            return self.results
 
 
 if __name__ == "__main__":
-    manager = QueueManager((IP, PORT), KEY)
-    client = QueueClient((IP, PORT), KEY)
+    # creation des queues
+    task_queue = queue.Queue()
+    result_queue = queue.Queue()
+    # register
+    QueueManager.register("get_tasks", callable=lambda: task_queue)
+    QueueManager.register("get_results", callable=lambda: result_queue)
+    QueueManager(address=("", PORT), authkey=KEY).get_server().serve_forever()

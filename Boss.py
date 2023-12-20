@@ -3,14 +3,22 @@ from Task import Task
 
 
 class Boss(QueueClient):
-    def __init__(self, address, authkey):
-        super().__init__(address, authkey)
+    def __init__(self):
+        super().__init__()
 
-    def put_task(self, id, size):
-        task = Task(id, size)
+    def put_tasks(self, size, nb_task):
+        for i in range(nb_task):
+            task = Task(i, size)
+            self.tasks.put(task)
 
-        self.tasks.put(task)
-
-    def get_result(self):
-        result = self.result.pop()
+    def get_res(self):
+        result = self.results.pop()
         print(result)
+
+    # def working(self):
+
+
+if __name__ == "__main__":
+    # creation des queues
+    b = Boss()
+    b.put_tasks(1000, 10)
