@@ -78,17 +78,3 @@ class Task:
         if not np.array_equal(self.x, t.x):
             return False
         return True
-
-    # def __add__(self, other):
-    #
-    # def __eq__(self, other):
-
-
-if __name__ == "__main__":
-    task1 = Task(1, 10)
-    task2 = Task(2, 15)
-    # task1.work()
-    txt = task1.to_JSON()
-    task3 = Task.from_json(txt)
-    print(task1 == task2)
-    print(task1 == task3)

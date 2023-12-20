@@ -12,13 +12,14 @@ class Boss(QueueClient):
             self.tasks.put(task)
 
     def get_res(self):
-        result = self.results.pop()
+        result = self.results.get()
         print(result)
 
     # def working(self):
 
 
 if __name__ == "__main__":
-    # creation des queues
+    # creation du boss
     b = Boss()
+    # creation de 10 taches mis dans la queue
     b.put_tasks(1000, 10)

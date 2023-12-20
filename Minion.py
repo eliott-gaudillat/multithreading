@@ -21,6 +21,7 @@ class Minion(QueueClient):
 
 
 if __name__ == "__main__":
-    # creation des queues
+    # creation d'un minion
     m = Minion()
+    # minion travaille
     m.working()
